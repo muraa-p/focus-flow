@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusFlow — Stay in the Zone</title>
+  <meta name="description" content="FocusFlow helps you beat procrastination with the Pomodoro technique, smart task management, and focus tracking. Stay productive, avoid burnout." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient Background Orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="13" stroke="url(#logoGrad)" stroke-width="2"/>
+          <path d="M14 7v7l5 3" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#a78bfa"/>
+              <stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">FocusFlow</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" data-view="timer">Timer</button>
+      <button class="nav-btn" data-view="tasks">Tasks</button>
+      <button class="nav-btn" data-view="stats">Stats</button>
+    </nav>
+    <div class="header-right">
+      <div class="streak-badge" title="Your current focus streak">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="url(#fireGrad)"/><defs><linearGradient id="fireGrad" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs></svg>
+        <span id="streakCount">0</span> day streak
+      </div>
+      <button class="settings-btn" id="settingsToggle" title="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN APP ===== -->
+  <main class="app-main">
+
+    <!-- ===== TIMER VIEW ===== -->
+    <section class="view active" id="timerView">
+      <div class="timer-layout">
+
+        <!-- Left: Timer Card -->
+        <div class="timer-card glass-card">
+
+          <!-- Mode Selector -->
+          <div class="mode-selector">
+            <button class="mode-btn active" data-mode="focus" data-duration="1500">Focus</button>
+            <button class="mode-btn" data-mode="short" data-duration="300">Short Break</button>
+            <button class="mode-btn" data-mode="long" data-duration="900">Long Break</button>
+          </div>
+
+          <!-- Circular Timer -->
+          <div class="timer-ring-wrapper">
+            <svg class="timer-ring" viewBox="0 0 220 220" width="220" height="220">
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#a78bfa"/>
+                  <stop offset="100%" stop-color="#06b6d4"/>
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <!-- Background ring -->
+              <circle class="ring-bg" cx="110" cy="110" r="95" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+              <!-- Progress ring -->
+              <circle class="ring-progress" cx="110" cy="110" r="95" fill="none" stroke="url(#ringGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="596.9" stroke-dashoffset="0" filter="url(#glow)" transform="rotate(-90 110 110)"/>
+            </svg>
+            <div class="timer-display">
+              <div class="timer-time" id="timerDisplay">25:00</div>
+              <div class="timer-label" id="timerLabel">Focus Session</div>
+              <div class="timer-session" id="sessionCount">Session 1 of 4</div>
+            </div>
+          </div>
+
+          <!-- Timer Controls -->
+          <div class="timer-controls">
+            <button class="ctrl-btn skip-btn" id="skipBtn" title="Skip to next">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+            </button>
+            <button class="ctrl-btn play-btn" id="playBtn">
+              <svg class="play-icon" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <svg class="pause-icon hidden" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <button class="ctrl-btn reset-btn" id="resetBtn" title="Reset timer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.41"/></svg>
+            </button>
+          </div>
+
+          <!-- Current Task -->
+          <div class="current-task-section">
+            <label class="section-label">Working on</label>
+            <div class="current-task-display" id="currentTaskDisplay">
+              <span class="no-task-text">No task selected — pick one from Tasks tab</span>
+            </div>
+          </div>
+
+          <!-- Ambient Sounds -->
+          <div class="ambient-section">
+            <label class="section-label">Ambient Sound</label>
+            <div class="ambient-btns">
+              <button class="ambient-btn" data-sound="rain" title="Rain">🌧️ Rain</button>
+              <button class="ambient-btn" data-sound="forest" title="Forest">🌲 Forest</button>
+              <button class="ambient-btn" data-sound="cafe" title="Café">☕ Café</button>
+              <button class="ambient-btn" data-sound="waves" title="Waves">🌊 Waves</button>
+              <button class="ambient-btn off-btn active-ambient" data-sound="none">🔇 Off</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Quick Tasks + Today's Progress -->
+        <div class="timer-sidebar">
+
+          <!-- Today's Progress -->
+          <div class="glass-card progress-card">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Today's Progress
+            </h3>
+            <div class="progress-stats">
+              <div class="stat-item">
+                <div class="stat-value" id="todaySessions">0</div>
+                <div class="stat-label">Sessions</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="todayMinutes">0</div>
+                <div class="stat-label">Minutes</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="todayTasks">0</div>
+                <div class="stat-label">Tasks Done</div>
+              </div>
+            </div>
+            <div class="daily-goal">
+              <div class="goal-header">
+                <span>Daily Goal</span>
+                <span id="goalProgress">0 / 8 sessions</span>
+              </div>
+              <div class="goal-bar">
+                <div class="goal-fill" id="goalFill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Task List -->
+          <div class="glass-card quick-tasks-card">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Active Tasks
+            </h3>
+            <div class="quick-task-list" id="quickTaskList">
+              <div class="empty-tasks">
+                <div class="empty-icon">📋</div>
+                <p>No tasks yet. Add some in the Tasks tab!</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TASKS VIEW ===== -->
+    <section class="view" id="tasksView">
+      <div class="tasks-layout">
+
+        <div class="tasks-header-card glass-card">
+          <div class="tasks-header-content">
+            <div>
+              <h2 class="tasks-title">Task Manager</h2>
+              <p class="tasks-subtitle">Break your work into focused sessions</p>
+            </div>
+            <div class="task-overview-pills">
+              <span class="pill pill-active" id="pillActive">0 active</span>
+              <span class="pill pill-done" id="pillDone">0 done</span>
+            </div>
+          </div>
+
+          <!-- Add Task Form -->
+          <div class="add-task-form">
+            <div class="input-row">
+              <input type="text" id="taskInput" class="task-input" placeholder="What do you need to focus on?" maxlength="100" autocomplete="off" />
+              <select id="taskPriority" class="task-select">
+                <option value="high">🔴 High</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="low">🟢 Low</option>
+              </select>
+              <input type="number" id="taskPomodoros" class="task-pomodoros" value="1" min="1" max="12" title="Estimated Pomodoros" />
+              <button class="add-task-btn" id="addTaskBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Task
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Categories -->
+        <div class="task-filter-bar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="high">🔴 High Priority</button>
+          <button class="filter-btn" data-filter="medium">🟡 Medium</button>
+          <button class="filter-btn" data-filter="low">🟢 Low</button>
+          <button class="filter-btn" data-filter="done">✅ Completed</button>
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list-container" id="taskListContainer">
+          <div class="full-empty-state">
+            <div class="empty-hero">📝</div>
+            <h3>Your task board is empty</h3>
+            <p>Add tasks above to start organizing your focus sessions</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== STATS VIEW ===== -->
+    <section class="view" id="statsView">
+      <div class="stats-layout">
+
+        <div class="stats-hero glass-card">
+          <h2 class="stats-title">Focus Analytics</h2>
+          <p class="stats-subtitle">Track your productivity over time</p>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="totalSessions">0</div>
+              <div class="hero-stat-label">Total Sessions</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="totalHours">0h</div>
+              <div class="hero-stat-label">Total Focus Time</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="totalTasksDone">0</div>
+              <div class="hero-stat-label">Tasks Completed</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="bestStreak">0</div>
+              <div class="hero-stat-label">Best Streak (days)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <!-- Weekly Chart -->
+          <div class="glass-card chart-card">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Sessions This Week
+            </h3>
+            <div class="bar-chart" id="weeklyChart">
+              <!-- Generated by JS -->
+            </div>
+            <div class="chart-days" id="chartDays"></div>
+          </div>
+
+          <!-- Productivity Score -->
+          <div class="glass-card score-card">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              Productivity Score
+            </h3>
+            <div class="score-ring-wrapper">
+              <svg class="score-ring" viewBox="0 0 200 200" width="160" height="160">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="14"/>
+                <circle id="scoreRingProgress" cx="100" cy="100" r="80" fill="none" stroke="url(#ringGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="502.4" stroke-dashoffset="502.4" transform="rotate(-90 100 100)"/>
+              </svg>
+              <div class="score-display">
+                <div class="score-value" id="productivityScore">0</div>
+                <div class="score-label">/ 100</div>
+              </div>
+            </div>
+            <div class="score-breakdown">
+              <div class="breakdown-item">
+                <span>Consistency</span>
+                <div class="breakdown-bar"><div class="breakdown-fill" id="consistencyBar" style="width:0%"></div></div>
+              </div>
+              <div class="breakdown-item">
+                <span>Completion Rate</span>
+                <div class="breakdown-bar"><div class="breakdown-fill" id="completionBar" style="width:0%"></div></div>
+              </div>
+              <div class="breakdown-item">
+                <span>Focus Depth</span>
+                <div class="breakdown-bar"><div class="breakdown-fill" id="focusBar" style="width:0%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insights card -->
+          <div class="glass-card insights-card">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              AI Insights
+            </h3>
+            <div class="insights-list" id="insightsList">
+              <div class="insight-item">
+                <div class="insight-icon">💡</div>
+                <div class="insight-text">Complete your first Pomodoro session to unlock personalized insights!</div>
+              </div>
+              <div class="insight-item">
+                <div class="insight-icon">🎯</div>
+                <div class="insight-text">Try setting a daily goal of 4 sessions to build a consistent habit.</div>
+              </div>
+              <div class="insight-item">
+                <div class="insight-icon">⚡</div>
+                <div class="insight-text">Research shows 52 minutes of focus followed by 17 min break is optimal.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent sessions -->
+          <div class="glass-card history-card">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Session History
+            </h3>
+            <div class="history-list" id="historyList">
+              <div class="no-history">No sessions yet. Start your first focus session!</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== SETTINGS MODAL ===== -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <h3>Settings</h3>
+        <button class="modal-close" id="settingsClose">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-group">
+          <label class="setting-label">Focus Duration (minutes)</label>
+          <input type="range" id="focusDurSetting" min="5" max="60" value="25" class="setting-slider" />
+          <span class="slider-value" id="focusDurVal">25</span>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Short Break (minutes)</label>
+          <input type="range" id="shortBreakSetting" min="1" max="15" value="5" class="setting-slider" />
+          <span class="slider-value" id="shortBreakVal">5</span>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Long Break (minutes)</label>
+          <input type="range" id="longBreakSetting" min="10" max="30" value="15" class="setting-slider" />
+          <span class="slider-value" id="longBreakVal">15</span>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Daily Session Goal</label>
+          <input type="range" id="dailyGoalSetting" min="2" max="16" value="8" class="setting-slider" />
+          <span class="slider-value" id="dailyGoalVal">8</span>
+        </div>
+        <div class="setting-group toggle-group">
+          <label class="setting-label">Auto-start Breaks</label>
+          <label class="toggle">
+            <input type="checkbox" id="autoBreakToggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-group toggle-group">
+          <label class="setting-label">Desktop Notifications</label>
+          <label class="toggle">
+            <input type="checkbox" id="notifToggle" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-group toggle-group">
+          <label class="setting-label">Sound Alerts</label>
+          <label class="toggle">
+            <input type="checkbox" id="soundToggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="save-btn" id="saveSettings">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">✅</div>
+    <div class="toast-text" id="toastText">Session complete!</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
