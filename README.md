@@ -1,5 +1,7 @@
 # FocusFlow
 
+> **Live demo:** https://focus-flow-liard-delta.vercel.app
+
 FocusFlow is a single-page productivity web app built around the Pomodoro technique with tasks, streaks, and simple focus analytics. It runs entirely in the browser and persists data to `localStorage`.
 
 ## Features
@@ -29,6 +31,8 @@ Option B (recommended, avoids browser file URL quirks):
 
 ```bash
 # from the FocusFlow folder
+
+> **Live demo:** https://focus-flow-liard-delta.vercel.app
 python -m http.server 5173
 ```
 
